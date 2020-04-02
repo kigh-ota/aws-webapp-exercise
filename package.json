@@ -1,12 +1,13 @@
 {
   "name": "aws-webapp-exercise",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "watch": "tsc -w -p tsconfig.server.json",
     "build": "npm run build:server",
     "build:server": "rm -rf dist/ && tsc -p tsconfig.server.json",
+    "build:docker": "docker build -t kigh-ota/aws-webapp-exercise:0.0.1 .",
     "lint": "eslint 'src/**/*.ts{x,}'",
     "lint:fix": "eslint --fix 'src/**/*.ts{x,}'",
     "test": "echo \"Error: no test specified\" && exit 1",
