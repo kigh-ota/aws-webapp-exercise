@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "tsc -w -p tsconfig.server.json",
+    "build": "npm run build:server",
     "build:server": "rm -rf dist/ && tsc -p tsconfig.server.json",
     "lint": "eslint 'src/**/*.ts{x,}'",
     "lint:fix": "eslint --fix 'src/**/*.ts{x,}'",
