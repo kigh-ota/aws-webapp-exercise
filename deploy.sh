@@ -10,6 +10,9 @@ VERSION="0.0.1"
 
 docker build -t ${DOCKER_REPOSITORY}/${IMAGE_NAME} .
 
-aws cloudformation deploy --stack-name app-repository --template-file cloudformation/AppRepository.yaml
+aws cloudformation deploy --stack-name app-repository --template-file cloudformation/EcrRepository.yaml
+if [ $? -ne 0 ]; then
+  exit 1
+fi
 aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${DOCKER_REPOSITORY}
 docker push ${DOCKER_REPOSITORY}/${IMAGE_NAME}:${VERSION}
