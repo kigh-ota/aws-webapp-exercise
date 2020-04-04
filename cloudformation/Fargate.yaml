@@ -4,7 +4,7 @@ Resources:
     Type: "AWS::ECS::Cluster"
     Properties:
       ClusterName: aws-webapp-exercise-ecs-cluster
-  EcsTaskDefinition:
+  ECSTaskDefinition:
     Type: "AWS::ECS::TaskDefinition"
     Properties:
       Cpu: 256
@@ -33,11 +33,11 @@ Resources:
           AssignPublicIp: ENABLED
       #     SecurityGroups:
       #       - !Ref ECSSecurityGroupId
-      #     Subnets:
-      #       - !Ref ECSSubnetId1
-      #       - !Ref ECSSubnetId2
+          Subnets:
+            - !ImportValue AppSubnet1aId
+            - !ImportValue AppSubnet1cId
       # ServiceName: !Sub "${ProjectName}-${ECSServiceName}"
-      TaskDefinition: !Ref EcsTaskDefinition
+      TaskDefinition: !Ref ECSTaskDefinition
   ECSTaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:

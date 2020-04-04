@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/16
+  Subnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 192.168.0.0/20
+      AvailabilityZone: ap-northeast-1a
+      VpcId: !Ref VPC
+  Subnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 192.168.16.0/20
+      AvailabilityZone: ap-northeast-1c
+      VpcId: !Ref VPC
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+Outputs:
+  AppSubnet1aId:
+    Value: !Ref Subnet1a
+    Export:
+      Name: AppSubnet1aId
+  AppSubnet1cId:
+    Value: !Ref Subnet1c
+    Export:
+      Name: AppSubnet1cId
