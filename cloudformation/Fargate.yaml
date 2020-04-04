@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  ECSCluster:
+    Type: "AWS::ECS::Cluster"
+    Properties:
+      ClusterName: aws-webapp-exercise-ecs-cluster
+  EcsTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: aws-webapp-exercise
+          Image: !Sub
+            - "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AppRepositoryRefValue}"
+            - AppRepositoryRefValue: !ImportValue AppRepositoryRef
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      DesiredCount: 1
+      LaunchType: FARGATE
+      # LoadBalancers:
+      #   - TargetGroupArn: !Ref TargetGroup
+      #     ContainerPort: 80
+      #     ContainerName: !Sub "${ProjectName}-${ECSContainerName}"
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+      #     SecurityGroups:
+      #       - !Ref ECSSecurityGroupId
+      #     Subnets:
+      #       - !Ref ECSSubnetId1
+      #       - !Ref ECSSubnetId2
+      # ServiceName: !Sub "${ProjectName}-${ECSServiceName}"
+      TaskDefinition: !Ref EcsTaskDefinition
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Fargate-ECSTaskExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
